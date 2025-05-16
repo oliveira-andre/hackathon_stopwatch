@@ -221,11 +221,12 @@
 
     <script>
         // Initialize stopwatch variables
+        let currentTime = localStorage.getItem('currentTimeInMs');
         let startTime = 0;
-        let elapsedTime = 0;
+        let elapsedTime = currentTime || 0;
         let isRunning = false;
         let intervalId = null;
-        
+ 
         // Get elements
         const hoursElement = document.getElementById('hours');
         const minutesElement = document.getElementById('minutes');
@@ -264,6 +265,7 @@
         function resetStopwatch() {
             isRunning = false;
             clearInterval(intervalId);
+            localStorage.clear();
             elapsedTime = 0;
             updateDisplay(0);
             startBtn.disabled = false;
@@ -276,17 +278,26 @@
         }
         
         function updateDisplay(timeInMs) {
+            // store time variable
+            localStorage.setItem('currentTimeInMs', `${timeInMs}`);
+
             // Calculate hours, minutes, seconds, and milliseconds
             const hours = Math.floor(timeInMs / (1000 * 60 * 60));
             const minutes = Math.floor((timeInMs % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeInMs % (1000 * 60)) / 1000);
             const milliseconds = Math.floor((timeInMs % 1000) / 10);
             
+            // parse time variables
+            const parsed_hours = String(hours).padStart(2, '0');
+            const parsed_minutes = String(minutes).padStart(2, '0');
+            const parsed_seconds = String(seconds).padStart(2, '0');
+            const parsed_miliseconds = String(milliseconds).padStart(2, '0');
+
             // Update display
-            hoursElement.innerText = String(hours).padStart(2, '0');
-            minutesElement.innerText = String(minutes).padStart(2, '0');
-            secondsElement.innerText = String(seconds).padStart(2, '0');
-            millisecondsElement.innerText = '.' + String(milliseconds).padStart(2, '0');
+            hoursElement.innerText = parsed_hours;
+            minutesElement.innerText = parsed_minutes;
+            secondsElement.innerText = parsed_seconds;
+            millisecondsElement.innerText = '.' + parsed_miliseconds;
         }
         
         // Event listeners for buttons
@@ -295,7 +306,7 @@
         resetBtn.addEventListener('click', resetStopwatch);
         
         // Initialize display
-        updateDisplay(0);
+        updateDisplay(currentTime || 0);
     </script>
 </body>
 </html>
