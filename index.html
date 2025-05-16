@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Stopwatch</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+        }
+        
+        .stopwatch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #121212;
+            border-radius: 20px;
+            padding: 30px 50px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 
+                        0 0 40px rgba(255, 255, 255, 0.05),
+                        inset 0 0 15px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stopwatch-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+            background: linear-gradient(90deg, #ff4d4d, #f9cb28);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 5px rgba(255, 77, 77, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin: 5px 0 20px 0;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+        
+        .stopwatch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .time-section {
+            display: flex;
+            align-items: baseline;
+        }
+        
+        .digit {
+            width: 70px;
+            text-align: center;
+            position: relative;
+            font-size: 4.5rem;
+            font-weight: 300;
+            color: white;
+        }
+        
+        .separator {
+            font-size: 4rem;
+            margin: 0 5px;
+            animation: pulse 1s infinite;
+            color: white;
+        }
+        
+        .time-label {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            margin-top: 5px;
+            text-align: center;
+            color: white;
+        }
+        
+        .digital-frame {
+            position: relative;
+            padding: 15px 30px;
+            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1),
+                        inset 0 0 5px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .start-btn {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .pause-btn {
+            background: linear-gradient(45deg, #FF9800, #FFC107);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #F44336, #FF5722);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+        
+        .date {
+            font-size: 1rem;
+            margin-top: 20px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .milliseconds {
+            font-size: 2.5rem;
+            margin-left: 5px;
+            color: #ff4d4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="stopwatch-container">
+        <h1 class="title">Hackathon</h1>
+        <h2 class="subtitle">Coding Since</h2>
+        <div class="digital-frame">
+            <div class="stopwatch" id="stopwatch">
+                <div class="time-section">
+                    <div class="hours">
+                        <div class="digit" id="hours">00</div>
+                        <div class="time-label">Hours</div>
+                    </div>
+                    <div class="separator">:</div>
+                    <div class="minutes">
+                        <div class="digit" id="minutes">00</div>
+                        <div class="time-label">Minutes</div>
+                    </div>
+                    <div class="separator">:</div>
+                    <div class="seconds">
+                        <div class="digit" id="seconds">00</div>
+                        <div class="time-label">Seconds</div>
+                    </div>
+                    <div class="milliseconds" id="milliseconds">.00</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" class="btn start-btn">Start</button>
+            <button id="pauseBtn" class="btn pause-btn">Pause</button>
+            <button id="resetBtn" class="btn reset-btn">Reset</button>
+        </div>
+        
+        <div class="date" id="date"></div>
+    </div>
+
+    <script>
+        // Initialize stopwatch variables
+        let startTime = 0;
+        let elapsedTime = 0;
+        let isRunning = false;
+        let intervalId = null;
+        
+        // Get elements
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const millisecondsElement = document.getElementById('milliseconds');
+        const dateElement = document.getElementById('date');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // Set current date
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElement.innerText = today.toLocaleDateString(undefined, options);
+        
+        // Stopwatch functions
+        function startStopwatch() {
+            if (!isRunning) {
+                isRunning = true;
+                startTime = Date.now() - elapsedTime;
+                intervalId = setInterval(updateStopwatch, 10); // Update every 10ms for smoother milliseconds
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+            }
+        }
+        
+        function pauseStopwatch() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(intervalId);
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
+        }
+        
+        function resetStopwatch() {
+            isRunning = false;
+            clearInterval(intervalId);
+            elapsedTime = 0;
+            updateDisplay(0);
+            startBtn.disabled = false;
+            pauseBtn.disabled = false;
+        }
+        
+        function updateStopwatch() {
+            elapsedTime = Date.now() - startTime;
+            updateDisplay(elapsedTime);
+        }
+        
+        function updateDisplay(timeInMs) {
+            // Calculate hours, minutes, seconds, and milliseconds
+            const hours = Math.floor(timeInMs / (1000 * 60 * 60));
+            const minutes = Math.floor((timeInMs % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeInMs % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor((timeInMs % 1000) / 10);
+            
+            // Update display
+            hoursElement.innerText = String(hours).padStart(2, '0');
+            minutesElement.innerText = String(minutes).padStart(2, '0');
+            secondsElement.innerText = String(seconds).padStart(2, '0');
+            millisecondsElement.innerText = '.' + String(milliseconds).padStart(2, '0');
+        }
+        
+        // Event listeners for buttons
+        startBtn.addEventListener('click', startStopwatch);
+        pauseBtn.addEventListener('click', pauseStopwatch);
+        resetBtn.addEventListener('click', resetStopwatch);
+        
+        // Initialize display
+        updateDisplay(0);
+    </script>
+</body>
+</html>
